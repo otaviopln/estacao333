@@ -31,7 +31,8 @@ async function runChild(mode) {
     original: async () => vm.runInThisContext(fs.readFileSync(process.env.ORIGINAL_JS, 'utf8')),
   };
   const result = await runScenario(loaders[mode], OPTIONS);
-  process.stdout.write('@@RESULT@@' + JSON.stringify(result));
+  // sai só depois de a escrita terminar (process.exit logo após write pode truncar a saída no pipe)
+  await new Promise((resolve) => process.stdout.write('@@RESULT@@' + JSON.stringify(result), resolve));
   process.exit(0);
 }
 
