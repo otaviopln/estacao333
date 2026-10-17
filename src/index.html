@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Estação 3:33</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%2307060d%27/%3E%3Ccircle cx=%278%27 cy=%278%27 r=%275.5%27 fill=%27%23e9dfc2%27/%3E%3Cpath d=%27M8 4v4l-1.5 3%27 stroke=%27%2315121c%27 fill=%27none%27/%3E%3C/svg%3E">
+<meta name="theme-color" content="#07060d">
+<meta name="description" content="Estação 3:33 — jogo de detetive em pixel art: três trens, três casos, um detetive e uma IA nos óculos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+<div id="game">
+  <img id="coverArt" src="assets/cover.webp" alt="">
+  <canvas id="c" width="1024" height="576"></canvas>
+  <div class="overlay">
+    <div id="fxgrade"></div><div id="fxvig"></div><div id="fxgrain"></div>
+    <div id="crt"></div>
+    <div id="label"></div>
+    <div id="dialog"><span class="who"></span><span class="txt"></span></div>
+    <div id="advice"></div>
+    <button id="fbtn">AGACHAR</button><button id="flb" class="mv">◀</button><button id="frb" class="mv">▶</button>
+    <button id="gbtn" title="Colocar/tirar os óculos (Q)" aria-label="Óculos"><svg viewBox="0 0 16 7" shape-rendering="crispEdges"><path fill="currentColor" d="M0 1h16v1H0zM1 2h6v4H1zM9 2h6v4H9z"/><path class="lens" d="M2 3h4v2H2zM10 3h4v2h-4z"/></svg><span>Q</span></button>
+    <div id="pov"><div id="povL"><div class="ph">ÓCULOS ▸ CHAT</div><div id="povU"></div><div id="povA"></div><div id="povH">clique para continuar ▼</div></div><div id="povR"><div class="ph">MEMÓRIAS DO CASO</div><ul id="povMem"></ul></div></div>
+    <div id="chat"><div class="ct">ÓCULOS · MODO CHAT</div><div id="cp"></div><div id="cf"></div><div id="cr"></div><div id="cb"><button id="cclr">limpar</button> <button id="csend">enviar ▸</button></div></div>
+    <div id="choices"></div>
+    <button id="fsbtn" title="Tela cheia (F)" aria-label="Tela cheia">⛶</button>
+    <div id="menu">
+      <nav class="mnav">
+        <button class="pxnav" data-panel="jogo">JOGO</button>
+        <button class="pxnav" data-panel="sobre">SOBRE</button>
+        <button class="pxnav" data-panel="devs">DESENVOLVEDORES</button>
+      </nav>
+      <div class="title">ESTAÇÃO 3:33</div>
+      <div class="sub">Um detetive, uma IA, sem previsão de retorno</div>
+      <button id="play" class="pxbtn">▶ JOGAR</button>
+      <div class="hint">ou aperte ENTER</div>
+      <div id="mpanel" class="pxpanel" role="dialog" aria-modal="true">
+        <div class="ph"></div>
+        <div class="pb"></div>
+        <button class="pxbtn sm" id="mclose">VOLTAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="touch" aria-hidden="true">
+  <div class="dpad"><button class="u" data-k="ArrowUp" tabindex="-1">▲</button><button class="l" data-k="ArrowLeft" tabindex="-1">◀</button><button class="r" data-k="ArrowRight" tabindex="-1">▶</button><button class="d" data-k="ArrowDown" tabindex="-1">▼</button><span class="c"></span></div>
+  <div class="ab"><button class="b" data-k="q" tabindex="-1">B<small>ÓCULOS</small></button><button class="a" data-k="e" tabindex="-1">A<small>AGIR</small></button></div>
+</div>
+<div id="rotate"><div class="ico">⟳</div>Gire o celular para jogar<small>toque para continuar assim mesmo</small></div>
+<script type="module" src="main.js"></script>
+</body>
+</html>

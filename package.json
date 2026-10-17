@@ -1,0 +1,19 @@
+{
+  "name": "estacao-333",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Estação 3:33 — jogo de detetive em pixel art (canvas 2D, ES Modules, sem dependências).",
+  "scripts": {
+    "dev": "node tools/dev-server.mjs",
+    "build": "node tools/build.mjs",
+    "test": "node tests/run.mjs",
+    "check": "node tools/check.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
