@@ -60,3 +60,9 @@ git push -u origin main
 O site publicado é o arquivo único `dist/index.html`: funciona em qualquer subcaminho (`/<repositorio>/`) sem
 configurar `base`, e não depende de servidor para ES Modules.
 
+## Versão para Steam (desktop)
+
+A pasta `desktop/` empacota o mesmo jogo com Electron + Steamworks (janela 16:9, F11/Alt+Enter, overlay da Steam e
+conquistas). Passo a passo completo — Steamworks, depots, conquistas e upload com SteamCMD — em
+[`docs/STEAM.md`](docs/STEAM.md). Para testar: `cd desktop && npm install && npm start`.
+

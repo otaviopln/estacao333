@@ -13,6 +13,7 @@ import { caseDone, gameState, player } from './core/state.js';
 import { installFocusGuards, installInputHandlers } from './game/input.js';
 import { installFinaleInput, installPlayButton, resetToMenu, startGame } from './game/lifecycle.js';
 import { startLoop } from './game/loop.js';
+import { installSteamBridge } from './platform/steam-bridge.js';
 import { installCover } from './ui/cover.js';
 import { installMobile } from './ui/mobile.js';
 import { povAdvance, startPOV } from './ui/pov.js';
@@ -24,6 +25,7 @@ installAmbient();
 installCover();
 installPlayButton();
 installMobile();
+installSteamBridge();
 startLoop();
 
 // Gancho opcional para testes automatizados (ver tests/): só atua se o ambiente o definir.

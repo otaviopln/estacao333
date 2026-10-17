@@ -125,3 +125,9 @@ fora do final do jogo e de três detalhes da estação). O que mudou e onde foi 
 `tests/golden.json` foi regenerado **a partir do HTML official** (`ORIGINAL_JS=official.js node tests/run.mjs --update`);
 `src/` e `dist/` produzem os mesmos 10.901 hashes, inclusive no roteiro do final.
 
+## 8. Plataformas
+
+`src/platform/` é a única camada que conhece o ambiente de hospedagem. `steam-bridge.js` só observa o estado
+(`caseDone`, `FIN.stage`) e chama `window.steam.unlock`, definido pelo `preload` do app desktop; no navegador o
+módulo não faz nada. O jogo continua sem dependência de Electron/Steam (ver `docs/STEAM.md`).
+

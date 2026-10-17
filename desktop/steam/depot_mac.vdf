@@ -1,0 +1,12 @@
+"DepotBuild"
+{
+	"DepotID" "SEU_DEPOT_MAC"
+	"ContentRoot" "..\release\mac-universal\"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.pdb"
+}

@@ -16,7 +16,7 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(ROOT, 'src');
 const DIST = path.join(ROOT, 'dist');
 
-const MIME = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const MIME = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.woff2': 'font/woff2' };
 const dataUri = (file) => `data:${MIME[path.extname(file)]};base64,${fs.readFileSync(file).toString('base64')}`;
 
 const IMPORT_RE = /^import\s+(?:\{[^}]*\}\s+from\s+)?'([^']+)';\n?/gm;
@@ -64,14 +64,25 @@ function assertUniqueTopLevelNames(modules) {
   }
 }
 
+/**
+ * Fonte VT323 embutida (jogo 100% offline, necessário no app da Steam). Se `src/assets/fonts/VT323-Regular.woff2`
+ * existir, o build a embute em base64 e remove os <link> do Google Fonts; sem o arquivo, mantém o Google Fonts.
+ */
+const FONT_FILE = path.join(SRC, 'assets', 'fonts', 'VT323-Regular.woff2');
+const GOOGLE_FONT_LINKS = /<link rel="preconnect" href="https:\/\/fonts\.googleapis\.com">\n<link href="https:\/\/fonts\.googleapis\.com[^>]*>\n/;
+const fontFace = () => `@font-face{font-family:'VT323';font-style:normal;font-weight:400;font-display:swap;src:url(${dataUri(FONT_FILE)}) format('woff2')}\n`;
+
 function build() {
   const modules = collect(path.join(SRC, 'main.js'));
   assertUniqueTopLevelNames(modules);
   const js = `(() => {\n${modules.map((m) => stripModule(m).replace(/^/gm, '  ').replace(/[ ]+$/gm, '')).join('\n')}})();`;
   const css = fs.readFileSync(path.join(SRC, 'styles', 'main.css'), 'utf8');
   let html = fs.readFileSync(path.join(SRC, 'index.html'), 'utf8');
+  const hasFont = fs.existsSync(FONT_FILE);
+  if (hasFont) html = html.replace(GOOGLE_FONT_LINKS, '');
+  else console.warn('AVISO: src/assets/fonts/VT323-Regular.woff2 ausente — o build usa Google Fonts (precisa de internet).');
   html = html
-    .replace('<link rel="stylesheet" href="styles/main.css">', () => `<style>\n${css}</style>`)
+    .replace('<link rel="stylesheet" href="styles/main.css">', () => `<style>\n${hasFont ? fontFace() : ''}${css}</style>`)
     .replace('src="assets/cover.webp"', () => `src="${dataUri(path.join(SRC, 'assets', 'cover.webp'))}"`)
     .replace('<script type="module" src="main.js"></script>', () => `<script>\n${js}\n</script>`);
   fs.mkdirSync(DIST, { recursive: true });
