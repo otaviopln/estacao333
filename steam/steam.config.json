@@ -1,0 +1,7 @@
+{
+  "$comment": "Fonte única dos IDs da Steam. appId 480 = app de teste da Valve (Spacewar): troque pelo seu. Depots com null são ignorados no upload.",
+  "appId": 480,
+  "depots": { "windows": null, "linux": null, "mac": null },
+  "branch": "",
+  "description": "Estacao 333"
+}

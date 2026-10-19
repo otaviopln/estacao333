@@ -3,17 +3,39 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Estação 3:33 — jogo de detetive em pixel art (canvas 2D, ES Modules, sem dependências).",
+  "description": "Estação 3:33 — jogo de detetive em pixel art para desktop (Electron + Steamworks). O jogo em si (game/) é canvas 2D sem dependências.",
+  "author": "Equipe Estação 3:33",
+  "license": "UNLICENSED",
+  "main": "desktop/main/index.js",
   "scripts": {
-    "dev": "node tools/dev-server.mjs",
-    "build": "node tools/build.mjs",
-    "test": "node tests/run.mjs",
-    "check": "node tools/check.mjs"
+    "dev": "node scripts/dev-server.mjs",
+    "gen": "node scripts/gen-achievements.mjs",
+    "build": "node scripts/build-game.mjs --target web",
+    "check": "node scripts/check.mjs",
+    "test": "npm run test:unit && npm run test:game",
+    "test:unit": "node --test \"desktop/tests/*.test.mjs\" \"scripts/tests/*.test.mjs\" \"game/tests/*.test.mjs\"",
+    "test:game": "node game/tests/run.mjs",
+    "desktop:prepare": "node scripts/desktop-prepare.mjs",
+    "desktop:dev": "node scripts/desktop-prepare.mjs --dev && electron .",
+    "desktop:start": "npm run desktop:prepare && electron .",
+    "desktop:dist:win": "npm run desktop:prepare && electron-builder --config desktop/electron-builder.config.cjs --win dir --x64",
+    "desktop:dist:win:portable": "npm run desktop:prepare && electron-builder --config desktop/electron-builder.config.cjs --win portable --x64",
+    "desktop:dist:win:installer": "npm run desktop:prepare && electron-builder --config desktop/electron-builder.config.cjs --win nsis --x64",
+    "desktop:dist:linux": "npm run desktop:prepare && electron-builder --config desktop/electron-builder.config.cjs --linux dir --x64",
+    "desktop:dist:mac": "npm run desktop:prepare && electron-builder --config desktop/electron-builder.config.cjs --mac dir --universal",
+    "steam:vdf": "node scripts/steam-vdf.mjs",
+    "steam:upload": "node scripts/steam-upload.mjs"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.4.0",
+    "@types/node": "^22.0.0"
+  },
+  "optionalDependencies": {
+    "steamworks.js": "^0.4.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }

@@ -1,7 +1,6 @@
 node_modules/
 dist/
+release/
+desktop/app/
 .DS_Store
 *.log
-desktop/app/
-desktop/release/
-desktop/node_modules/

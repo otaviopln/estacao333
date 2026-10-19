@@ -1,0 +1,20 @@
+{
+  "$comment": "Fonte única das conquistas. Gera game/src/platform/achievement-ids.js (npm run gen) e o runtime do app desktop. Cadastre os mesmos IDs em Steamworks > Stats & Achievements.",
+  "achievements": [
+    { "key": "case1", "id": "CASE_1_SOLVED", "hidden": false,
+      "name": { "pt-BR": "Primeiro caso", "en": "First Case" },
+      "description": { "pt-BR": "Resolva o primeiro caso da Estação 3:33.", "en": "Solve the first case at Station 3:33." } },
+    { "key": "case2", "id": "CASE_2_SOLVED", "hidden": false,
+      "name": { "pt-BR": "Segundo caso", "en": "Second Case" },
+      "description": { "pt-BR": "Resolva o segundo caso.", "en": "Solve the second case." } },
+    { "key": "case3", "id": "CASE_3_SOLVED", "hidden": false,
+      "name": { "pt-BR": "Terceiro caso", "en": "Third Case" },
+      "description": { "pt-BR": "Resolva o terceiro caso.", "en": "Solve the third case." } },
+    { "key": "credits", "id": "FINISHED_GAME", "hidden": false,
+      "name": { "pt-BR": "Fim da linha", "en": "End of the Line" },
+      "description": { "pt-BR": "Chegue aos créditos finais.", "en": "Reach the final credits." } },
+    { "key": "platform4", "id": "PLATFORM_4", "hidden": true,
+      "name": { "pt-BR": "Plataforma 4", "en": "Platform 4" },
+      "description": { "pt-BR": "Descubra o que espera na plataforma 4.", "en": "Find out what waits on platform 4." } }
+  ]
+}
