@@ -2,6 +2,7 @@
 import { activeCase } from '../cases/registry.js';
 import { FEET, RENDER_SCALE, SCREEN_H, SCREEN_W } from '../core/config.js';
 import { gameState, player, smoke } from '../core/state.js';
+import { stateT } from '../cases/tutorial/state.js';
 import { ctx, pixelText, rect } from '../render/canvas.js';
 import { drawClues } from '../render/clue-art.js';
 import { drawDetective } from '../render/detective.js';
@@ -21,7 +22,11 @@ export function drawPlay() {
     ac.drawDoors();
   } else if (gameState.scene !== "prologue") drawStation();
   if (gameState.glassesOn) drawVision();
-  if (gameState.cutscene !== 3) {
+  // Não desenha o detetive durante o prólogo (escritório/rua são desenhados por drawPrologue)
+  // nem durante a cutscene de exterior do carro do caso 0 (o detetive está dentro do veículo).
+  const isPrologue = gameState.scene === "prologue";
+  const isCarExteriorCutscene = gameState.caseIndex === 3 && stateT && stateT.run && stateT.run.place === "carExterior";
+  if (gameState.cutscene !== 3 && !isPrologue && !isCarExteriorCutscene) {
     if (!(ac && ac.drawPlayer && ac.drawPlayer())) drawDetective(player.x, FEET, player.dir, player.moving, player.walk);
     if (ac && ac.drawFront) ac.drawFront();
   }

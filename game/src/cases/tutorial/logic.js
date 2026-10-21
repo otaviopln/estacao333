@@ -126,6 +126,11 @@ export function tutorialTick(dt) {
         }
       });
     }
+  } else if (r.place === "room" && r.step === "move") {
+    // Avança para interação quando o detetive chega ao meio do quarto
+    if (player.x >= 140) {
+      goStep("interact");
+    }
   } else if (gameState.caseSolved && r.step === "room") {
     goStep("call");
   }
@@ -142,16 +147,25 @@ function arriveHotel() {
 
 function transitionTick(r, dt) {
   r.trans.t += dt;
-  if (r.trans.phase === "out" && r.trans.t >= 0.8) {
-    r.place = "room";
-    gameState.worldWidth = ROOM_W;
-    gameState.hotspots = roomHotspots();
-    gameState.cameraX = 0;
-    player.x = 24; player.dir = 1; player.tx = null; player.pending = null;
-    r.trans = { phase: "in", t: 0 };
-  } else if (r.trans.phase === "in" && r.trans.t >= 1.6) {
-    r.trans = null;
-    say(ROOM_LINES, () => { r.busy = false; goStep("move"); });
+  // Fade out: escurece a tela enquanto o carro se afasta
+  if (r.trans.phase === "out") {
+    r.fade = Math.min(1, r.trans.t / 0.8);
+    if (r.trans.t >= 0.8) {
+      r.place = "room";
+      gameState.worldWidth = ROOM_W;
+      gameState.hotspots = roomHotspots();
+      gameState.cameraX = 0;
+      player.x = 24; player.dir = 1; player.tx = null; player.pending = null;
+      r.trans = { phase: "in", t: 0 };
+    }
+  } else if (r.trans.phase === "in") {
+    // Fade in: clareia a tela ao entrar no quarto
+    r.fade = Math.max(0, 1 - r.trans.t / 1.6);
+    if (r.trans.t >= 1.6) {
+      r.trans = null;
+      r.fade = 0;
+      say(ROOM_LINES, () => { r.busy = false; goStep("move"); });
+    }
   }
 }
 
