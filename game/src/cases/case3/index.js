@@ -3,7 +3,7 @@ import { FEET } from '../../core/config.js';
 import { gameState, player } from '../../core/state.js';
 import { drawSprite } from '../../render/canvas.js';
 import { CLUE_ART } from '../../render/clue-art.js';
-import { DET_CROUCH, DET_PAL } from '../../sprites/characters.js';
+import { detectiveSkin } from '../../sprites/detective-skins.js';
 import { clueMemory } from '../memory.js';
 import { CASES } from '../registry.js';
 import { ambStop } from './ambience.js';
@@ -56,7 +56,7 @@ Object.assign(CASES[2], {
     if (!state3.run) return false;
     if (state3.run.hidden) return true;
     if (state3.run.sec === "corr" && (state3.run.crouch || state3.run.crouchHold)) {
-      drawSprite(DET_CROUCH, DET_PAL, Math.round(player.x) - 6, FEET - DET_CROUCH.length, player.dir < 0);
+      drawSprite(detectiveSkin().crouch, detectiveSkin().pal, Math.round(player.x) - 6, FEET - detectiveSkin().crouch.length, player.dir < 0);
       return true;
     }
     return false;

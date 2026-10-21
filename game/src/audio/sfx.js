@@ -203,3 +203,89 @@ export function train04Brake() {
   o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + 1.35);
   noiseHit(ac, ac.destination, t0 + 1.1, 1.4, 0.3, 2500, 9000);
 }
+
+/* ---------- prólogo: telefone, fogos de São João e o carro ---------- */
+/** Telefone de disco: duas campainhas alternando ~25 vezes por segundo, durante 1 s. */
+export function phoneRing() {
+  audioInit();
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  for (let k = 0; k < 25; k++) tone(ac, ac.destination, "square", k % 2 ? 1380 : 1720, t0 + k * 0.04, 0.03, 0.05, 0.002, 4200);
+}
+
+export function receiverPickup() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  noiseHit(ac, ac.destination, ac.currentTime, 0.05, 0.3, 300, 3000);
+  tone(ac, ac.destination, "sine", 140, ac.currentTime, 0.12, 0.12, 0.003);
+}
+
+/** Fogos distantes (a festa de São João lá fora): assobio subindo e estouro abafado. */
+export function firework() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  const o = ac.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(700, t0); o.frequency.exponentialRampToValueAtTime(2200, t0 + 0.4);
+  const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.018, t0 + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.42);
+  o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + 0.45);
+  noiseHit(ac, ac.destination, t0 + 0.42, 0.45, 0.2, 90, 1400);
+  tone(ac, ac.destination, "sine", 70, t0 + 0.42, 0.3, 0.12, 0.004);
+}
+
+export function carBrake() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  noiseHit(ac, ac.destination, t0, 0.7, 0.1, 2200, 7000);
+  const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(900, t0); o.frequency.exponentialRampToValueAtTime(380, t0 + 0.7);
+  const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800;
+  const g = ac.createGain(); g.gain.setValueAtTime(0.025, t0); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.72);
+  o.connect(lp); lp.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + 0.75);
+}
+
+export function carDoor() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  noiseHit(ac, ac.destination, ac.currentTime, 0.09, 0.4, 100, 1100);
+  tone(ac, ac.destination, "sine", 90, ac.currentTime, 0.2, 0.3, 0.003);
+  tone(ac, ac.destination, "sine", 1900, ac.currentTime + 0.05, 0.05, 0.05, 0.002);
+}
+
+/** Motor acelerando: o carro chega, ou parte, na rua. */
+export function engineRev(up) {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  const o = ac.createOscillator(); o.type = "sawtooth";
+  o.frequency.setValueAtTime(up ? 46 : 92, t0); o.frequency.exponentialRampToValueAtTime(up ? 98 : 40, t0 + 1.6);
+  const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 380;
+  const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.13, t0 + 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.7);
+  o.connect(lp); lp.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + 1.75);
+  noiseHit(ac, ac.destination, t0, 1.5, 0.06, 80, 700);
+}
+
+/** Aviso suave de que um passo do tutorial foi cumprido. */
+export function tutorialDing() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  [[84, 0], [88, 0.09]].forEach(([m, d]) => tone(ac, ac.destination, "sine", mf(m), ac.currentTime + d, 0.35, 0.05, 0.005));
+}
+
+/** Fechadura eletrônica do hotel: bipe agudo + estalo da trava. */
+export function lockBeep() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  const t0 = ac.currentTime;
+  tone(ac, ac.destination, "square", 1760, t0, 0.07, 0.05, 0.002, 5000);
+  tone(ac, ac.destination, "square", 2200, t0 + 0.1, 0.09, 0.05, 0.002, 5000);
+  noiseHit(ac, ac.destination, t0 + 0.32, 0.05, 0.35, 400, 2600);
+}
+
+/** Interruptor de luz. */
+export function switchClick() {
+  const ac = gameState.audioCtx;
+  if (!ac) return;
+  noiseHit(ac, ac.destination, ac.currentTime, 0.03, 0.4, 1500, 5000);
+  tone(ac, ac.destination, "square", 300, ac.currentTime, 0.03, 0.06, 0.001, 2000);
+}

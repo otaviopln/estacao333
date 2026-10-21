@@ -293,6 +293,7 @@ export async function runScenario(loadGame, { seed = 7, framesPerCase = 2500, de
   };
   await loadGame();
   env.step(40);                                  // capa
+  api.G.skipPrologue = true;                     // o golden cobre os 3 casos originais; o prólogo tem teste próprio
   api.startGame();
   env.step(80);                                  // fade
   for (let i = 0; i < 12 && api.G.dialogLine; i++) { env.key('e'); env.step(6); }

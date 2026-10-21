@@ -127,3 +127,34 @@ fora do final do jogo e de três detalhes da estação). O que mudou e onde foi 
 
 `game/tests/golden.json` foi regenerado **a partir do HTML official** (`ORIGINAL_JS=official.js node game/tests/run.mjs --update`);
 `game/src/` e `dist/web/` produzem os mesmos 10.901 hashes, inclusive no roteiro do final.
+
+## 9. Perfil do jogador, prólogo e Caso 0 (tutorial)
+
+**Fluxo:** capa → JOGAR → formulário de identificação (nome + sexo) → cutscene no escritório (Campina Grande) → rua (chegada do carro)
+→ **Caso 0: A carona suspeita** (carro, 2 pistas → hotel, 4 pistas → dedução → emboscada e prisão) → Estação Central, 3h33.
+
+**Enredo:** o(a) detetive é de Campina Grande e recebe, às 19h42, o telefonema da doutora Helena Albuquerque (Polícia Científica da
+Paraíba): três ocorrências, sempre às 3h33, na mesma estação do metrô de João Pessoa. Um carro com motorista (Valdemar) leva
+o(a) detetive ao Hotel Farol (Tambaú). No carro ele só age de modo estranho; no quarto 307 as pistas mostram que pretende entrar
+às 2h50 com uma cópia do cartão e uma pistola com silenciador. A IA dos óculos conclui, o jogador obedece (ligar para a Dra. Helena,
+apagar a luz, esperar ao lado da porta, acender a luz e dar voz de prisão) e o motorista é preso. Depois disso o jogo segue como antes.
+
+| Peça | Onde | Observação |
+|---|---|---|
+| Perfil (nome, sexo) e adaptação de texto | `core/profile.js` | `personalize(texto)`: nome no vocativo "Detetive!", concordância (o/a detetive, doutor/a, "o senhor"/"a senhora", "meu filho"/"minha filha") e tokens `{nome} {sr} {Sr} {o} {ele} {Ele} {tit} {doutor} {filho}` |
+| Formulário | `ui/profile-form.js` + `#profile` em `index.html` | validação, pré-visualização das skins, Enter/Esc/setas |
+| Skins | `sprites/detective-skins.js`, `assets/news-photo-f.jpg` | feminina com cabelo comprido, chapéu azul, trench vinho; retrato do jornal/créditos também muda |
+| Cutscene (escritório e rua) | `scenes/prologue.js` | máquina de estados por tempo, como o final do jogo |
+| Caso 0 | `cases/tutorial/` | registrado em `CASES[3]`; não conta em `caseDone` nem nas plataformas |
+| Primeira fala na estação | `scenes/station-intro.js` | |
+
+**O que o Caso 0 ensina, em ordem** (o passo atual aparece na faixa de dica dos óculos): andar → interagir → ligar os óculos (Q) → análise
+por objeto (a luz azul guia até a próxima pista) → contador de pistas → dedução (prompt na IA) → ligação/interruptor → botão de ação
+contextual (**ESPERAR**) → escolha de opções (1-3) com consequências.
+
+**Escrevendo falas novas:** use o texto neutro quando der; para o que depende do jogador use os tokens (`Obrigad{o}`, `{sr}`, `{nome}`).
+Falas antigas escritas no masculino já são adaptadas automaticamente (veja as exceções em `tests/profile.test.mjs`).
+Com o perfil padrão (sem nome, masculino) `personalize` não altera nada: é assim que o teste golden dos 3 casos originais continua valendo.
+Para esse teste o gancho `gameState.skipPrologue = true` pula o prólogo; o prólogo tem teste próprio (`game/tests/prologue.test.mjs`:
+um bot joga tudo, com os dois sexos, em ES Modules e no bundle, e os dígitos de render/áudio precisam coincidir).
+

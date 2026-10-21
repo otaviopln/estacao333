@@ -3,7 +3,8 @@ import { SCREEN_H, SCREEN_W } from '../../core/config.js';
 import { drops, gameState, player } from '../../core/state.js';
 import { ctx, drawLine, drawSprite, drawText, pixelText, pixelTextScaled, rect } from '../../render/canvas.js';
 import { darknessCtx, darknessMask, punchLight } from '../../render/darkness.js';
-import { ARREST_PHOTO, NEWS_PHOTO } from '../../render/images.js';
+import { personalize } from '../../core/profile.js';
+import { ARREST_PHOTO, detectivePhoto } from '../../render/images.js';
 import { fallAng, fallY, spriteRot } from '../../render/sprite-fx.js';
 import { bench, carShell, drawDoor } from '../../render/wagon.js';
 import { archShape } from '../../scenes/station.js';
@@ -130,14 +131,15 @@ function drawNewspaper() {
   ctx.fillText("FANTASMA DA ESTAÇÃO 42", 0, y0 + 33);
   ctx.fillText("ERA UM ENGENHEIRO", 0, y0 + 44.5);
   ctx.textAlign = "left";
-  paperText("Detetive desvenda o mistério que aterrorizava o trem da plataforma 3 e encontra o responsável escondido nos túneis", 0, y0 + 51, pw - 30, 4.4, 5, soft, "italic", "center");
+  paperText(personalize("Detetive desvenda o mistério que aterrorizava o trem da plataforma 3 e encontra o responsável escondido nos túneis"), 0, y0 + 51, pw - 30, 4.4, 5, soft, "italic", "center");
   rect(x0 + 5, y0 + 59, pw - 10, 0.4, soft);
   // foto do detetive (da capa) e foto da prisão
   const fx = x0 + 7, fy = y0 + 62, fw = 40, fh = 52;
   rect(fx - 0.8, fy - 0.8, fw + 1.6, fh + 1.6, ink);
-  if (NEWS_PHOTO && NEWS_PHOTO.complete && NEWS_PHOTO.naturalWidth) ctx.drawImage(NEWS_PHOTO, fx, fy, fw, fh);
+  const photo = detectivePhoto();
+  if (photo && photo.complete && photo.naturalWidth) ctx.drawImage(photo, fx, fy, fw, fh);
   else rect(fx, fy, fw, fh, "#3a342a");
-  serif(3.3, "italic"); ctx.fillStyle = soft; ctx.fillText("O detetive responsável pelo caso.", fx, fy + fh + 4);
+  serif(3.3, "italic"); ctx.fillStyle = soft; ctx.fillText(personalize("O detetive responsável pelo caso."), fx, fy + fh + 4);
   const ax = x0 + pw - 7 - 62, ay = fy, aw = 62, ah = 40;
   rect(ax - 0.8, ay - 0.8, aw + 1.6, ah + 1.6, ink);
   arrestPhoto(ax, ay, aw, ah);

@@ -74,7 +74,7 @@ canvas{position:relative;display:block;width:100%;height:100%;image-rendering:pi
 #choices .q{font-size:calc(var(--s)*9px);color:var(--accent)}
 #choices button{font:inherit;font-size:calc(var(--s)*8px);color:var(--ink);background:var(--box);border:calc(var(--s)*1px) solid var(--line);padding:calc(var(--s)*3px) calc(var(--s)*6px);width:92%;cursor:pointer;line-height:1.1}
 #choices button:hover{border-color:var(--accent);color:var(--accent)}
-#advice{position:absolute;left:calc(var(--s)*3px);top:calc(var(--s)*3px);max-width:46%;display:none;background:linear-gradient(180deg,rgba(6,38,58,.88),rgba(3,18,34,.88));box-shadow:0 0 calc(var(--s)*6px) rgba(95,224,255,.35);backdrop-filter:blur(calc(var(--s)*.6px));border:calc(var(--s)*1px) solid #5fe0ff;color:#bff3ff;padding:calc(var(--s)*2px) calc(var(--s)*3px);font-size:calc(var(--s)*6px);line-height:1.05;text-align:left}
+#advice{position:absolute;left:calc(var(--s)*15px);top:calc(var(--s)*3px);max-width:46%;display:none;background:linear-gradient(180deg,rgba(6,38,58,.88),rgba(3,18,34,.88));box-shadow:0 0 calc(var(--s)*6px) rgba(95,224,255,.35);backdrop-filter:blur(calc(var(--s)*.6px));border:calc(var(--s)*1px) solid #5fe0ff;color:#bff3ff;padding:calc(var(--s)*2px) calc(var(--s)*3px);font-size:calc(var(--s)*6px);line-height:1.05;text-align:left}
 #chat{position:absolute;inset:0;display:none;flex-direction:column;gap:calc(var(--s)*3px);padding:calc(var(--s)*5px);box-sizing:border-box;background:rgba(7,10,18,.95);pointer-events:auto;overflow:auto;font-size:calc(var(--s)*7px);line-height:1.1;text-align:left}
 #chat .ct{color:#5fe0ff;font-size:1.15em}
 #cp{border:calc(var(--s)*1px) solid #5fe0ff;padding:calc(var(--s)*3px);min-height:calc(var(--s)*24px);color:var(--ink)}
@@ -146,3 +146,25 @@ html.touch #touch.on{display:block}
 #fxgrain{mix-blend-mode:overlay;opacity:.05;background-image:var(--grain);background-size:calc(var(--s)*40px) calc(var(--s)*40px);animation:grainmv .5s steps(1) infinite}
 @keyframes grainmv{0%{background-position:0 0}20%{background-position:37% 61%}40%{background-position:-23% 14%}60%{background-position:71% -32%}80%{background-position:-48% 83%}}
 @media (prefers-reduced-motion: reduce){#fxgrain{animation:none}}
+
+/* ---- formulário de identificação (nome e sexo do detetive) ---- */
+#profile{left:var(--axis);right:auto;top:calc(var(--s)*30px);width:64%;transform:translateX(-50%);text-align:left}
+#profile .ph{text-align:center}
+#profile .pn{margin:0 0 calc(var(--s)*3px);font-size:calc(var(--s)*5.5px);color:#a9b8d9;text-align:center;line-height:1.1}
+#profile .fld{margin:calc(var(--s)*2px) 0 calc(var(--s)*1px);font-size:calc(var(--s)*6px);color:#e8b04a;letter-spacing:calc(var(--s)*.4px)}
+#pname{width:100%;box-sizing:border-box;font:inherit;font-size:calc(var(--s)*9px);line-height:1;color:var(--ink);background:#0b0a16;border:0;border-radius:0;outline:0;
+  padding:calc(var(--s)*2px) calc(var(--s)*3px);box-shadow:0 0 0 calc(var(--s)*1px) #5b4d7d;caret-color:#e8b04a}
+#pname:focus{box-shadow:0 0 0 calc(var(--s)*1px) #e8b04a}
+#pname::placeholder{color:#4f4a6c}
+.sex{display:flex;gap:calc(var(--s)*4px)}
+.pxsex{flex:1;display:flex;align-items:center;justify-content:center;gap:calc(var(--s)*3px);font:inherit;font-size:calc(var(--s)*7px);line-height:1;color:#e9e4f8;background:#1b1830;border:0;
+  padding:calc(var(--s)*2px) calc(var(--s)*2px);cursor:pointer;box-shadow:0 0 0 calc(var(--s)*1px) #5b4d7d}
+.pxsex:hover,.pxsex:focus-visible{background:#2a2548;outline:0}
+.pxsex[aria-checked="true"]{background:#e8b04a;color:#1b1726;box-shadow:0 0 0 calc(var(--s)*1px) #fff2c0}
+.pxsex .skin{width:calc(var(--s)*8px);height:auto;image-rendering:pixelated;flex:none}
+.perr{min-height:calc(var(--s)*7px);margin-top:calc(var(--s)*2px);font-size:calc(var(--s)*6px);color:#ff8a6a;text-align:center}
+.prow{display:flex;justify-content:center;gap:calc(var(--s)*6px)}
+.prow .pxbtn.sm{margin-top:calc(var(--s)*2px)}
+#menu.profiling #play,#menu.profiling .hint{display:none}
+#profile.shake{animation:pshake .25s linear}
+@keyframes pshake{20%{transform:translateX(-50%) translateX(calc(var(--s)*-2px))}60%{transform:translateX(-50%) translateX(calc(var(--s)*2px))}}

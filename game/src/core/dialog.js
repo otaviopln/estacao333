@@ -1,5 +1,6 @@
 /** @file Fila de diálogos com efeito de digitação (`say`) e avanço de falas (`advance`). */
 import { dlg, txtEl, whoEl } from './dom.js';
+import { personalize, playerName } from './profile.js';
 import { gameState } from './state.js';
 
 export const DETECTIVE = "Detetive";
@@ -24,11 +25,12 @@ function nextLine() {
     return;
   }
   const wasOpen = !!gameState.dialogLine;
-  gameState.dialogLine = gameState.dialogQueue.shift();
+  const [speaker, line] = gameState.dialogQueue.shift();
+  gameState.dialogLine = [speaker, personalize(line)];
   gameState.dialogShown = 0;
   const who = gameState.dialogLine[0];
   const isGlasses = who === GLASSES || who === MEMORY;
-  whoEl.textContent = isGlasses ? "◈ " + (who === MEMORY ? "MEMÓRIA REGISTRADA" : "ÓCULOS") : who;
+  whoEl.textContent = isGlasses ? "◈ " + (who === MEMORY ? "MEMÓRIA REGISTRADA" : "ÓCULOS") : who === DETECTIVE ? playerName() : who;
   txtEl.textContent = "";
   const kind = !who ? "narr" : isGlasses ? "glass" : "";
   const changed = !wasOpen || dlg.dataset.kind !== kind;

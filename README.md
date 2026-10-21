@@ -10,6 +10,12 @@ steam/     App ID, depots, conquistas (fonte única)
 scripts/   build, prepare, VDF, upload, check
 ```
 
+## O jogo
+
+Ao clicar em JOGAR, o jogador informa **nome e sexo** do detetive (skin masculina ou feminina; as falas se adaptam). Começa com uma cutscene no
+escritório em Campina Grande, segue para o **Caso 0 (tutorial)** — carro e quarto de hotel — e só então chega à Estação Central, às 3h33.
+Detalhes em [`docs/JOGO.md`](docs/JOGO.md#9-perfil-do-jogador-prólogo-e-caso-0-tutorial).
+
 ## Comandos
 
 | | |

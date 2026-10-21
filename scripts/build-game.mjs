@@ -28,7 +28,7 @@ const IMPORT_RE = /^import\s+(?:\{[^}]*\}\s+from\s+)?(['"])([^'"]+)\1;\n?/gm;
 /** Módulo virtual: imagens embutidas no lugar de arquivos externos. */
 function inlinedImagesModule() {
   const a = (n) => dataUri(path.join(SRC, 'assets', n));
-  return `export const IMAGE_URLS = {\n  newsPhoto: '${a('news-photo.jpg')}',\n  arrestPhoto: '${a('arrest-photo.jpg')}',\n};\n`;
+  return `export const IMAGE_URLS = {\n  newsPhoto: '${a('news-photo.jpg')}',\n  newsPhotoFemale: '${a('news-photo-f.jpg')}',\n  arrestPhoto: '${a('arrest-photo.jpg')}',\n};\n`;
 }
 
 function readModule(file) {

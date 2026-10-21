@@ -5,14 +5,14 @@ import { isAudioUnlocked } from './ambient.js';
 import { getNoise, mf, noiseHit, schedLoop, tone } from './synth.js';
 
 /* ---------- trilhas dos casos: elevador (caso 1), trem andando e ação (caso 2) ---------- */
-const caseAud = { elev: null, train: null, action: null };
+const caseAud = { elev: null, train: null, action: null, car: null };
 
 function stopLoop(key) {
   const st = caseAud[key], ac = gameState.audioCtx;
   if (!st || !ac) return;
   caseAud[key] = null; clearInterval(st.timer);
   st.out.gain.setTargetAtTime(0, ac.currentTime, 0.4);
-  setTimeout(() => { try { st.out.disconnect(); if (st.noise) st.noise.stop(); } catch (e) {} }, 1800);
+  setTimeout(() => { try { st.out.disconnect(); if (st.noise) st.noise.stop(); if (st.eng) st.eng.stop(); } catch (e) {} }, 1800);
 }
 
 // caso 1: "música de elevador" em bossa nova suave (vibrafone, baixo e chocalho)
@@ -50,6 +50,26 @@ function trainStart(ac) {
   caseAud.train = st;
 }
 
+
+// caso 0 (tutorial): dentro do carro — motor grave, ruído de pista e os "tum-tum" das emendas do asfalto
+function carStart(ac) {
+  if (caseAud.car) return;
+  const st = schedLoop(ac, (s, t0) => {
+    tone(ac, s.out, "sine", 62, t0, 0.14, 0.07, 0.004);
+    if (s.i % 2) tone(ac, s.out, "sine", 58, t0 + 0.12, 0.12, 0.05, 0.004);
+  }, 0.74, 0.5);
+  const src = ac.createBufferSource(); src.buffer = getNoise(ac); src.loop = true;
+  const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 420;
+  const g = ac.createGain(); g.gain.value = 0.2;
+  src.connect(lp); lp.connect(g); g.connect(st.out); src.start();
+  const eng = ac.createOscillator(); eng.type = "sawtooth"; eng.frequency.value = 47;
+  const el = ac.createBiquadFilter(); el.type = "lowpass"; el.frequency.value = 150;
+  const eg = ac.createGain(); eg.gain.value = 0.07;
+  eng.connect(el); el.connect(eg); eg.connect(st.out); eng.start();
+  st.noise = src; st.eng = eng;
+  caseAud.car = st;
+}
+
 // caso 2: trilha de ação do tiroteio (bateria, baixo e cordas staccato)
 const ACT_BASS = [40, 40, 52, 40, 43, 40, 47, 45];
 
@@ -74,7 +94,7 @@ const NO_CUES = { loops: [], gas: null };
 
 /**
  * Liga/desliga as trilhas conforme o caso atual pede (`CaseDefinition.audioCues()`).
- * Nomes de loops conhecidos: 'elevator', 'train', 'action'.
+ * Nomes de loops conhecidos: 'elevator', 'train', 'action', 'car'.
  */
 export function caseMusic() {
   const ac = gameState.audioCtx;
@@ -85,6 +105,7 @@ export function caseMusic() {
   if (cues.loops.includes("elevator")) elevStart(ac); else stopLoop("elev");
   if (cues.loops.includes("train")) trainStart(ac); else stopLoop("train");
   if (cues.loops.includes("action")) actionStart(ac); else stopLoop("action");
+  if (cues.loops.includes("car")) carStart(ac); else stopLoop("car");
   gasAudio(ac, cues.gas);
 }
 

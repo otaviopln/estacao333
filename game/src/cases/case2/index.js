@@ -5,7 +5,7 @@ import { gameState, player } from '../../core/state.js';
 import { CLUE_ART } from '../../render/clue-art.js';
 import { drawDetective } from '../../render/detective.js';
 import { fallAng, fallY, spriteRot } from '../../render/sprite-fx.js';
-import { DET_IDLE, DET_PAL } from '../../sprites/characters.js';
+import { detectiveSkin } from '../../sprites/detective-skins.js';
 import { clueMemory } from '../memory.js';
 import { CASES } from '../registry.js';
 import { welcomeBack } from '../session.js';
@@ -87,7 +87,7 @@ Object.assign(CASES[1], {
   cameraFix: () => state2.run && state2.run.camFix != null ? state2.run.camFix : null,
   drawPlayer() {
     if (!state2.run) return false;
-    if (state2.run.dp > 0 || state2.run.dsw > 0) spriteRot(DET_IDLE, DET_PAL, Math.round(player.x), Math.round(fallY(FEET, state2.run.dp)), fallAng(state2.run.dp) + (state2.run.dsw > 0 ? Math.sin(gameState.clock * 8) * 0.12 : 0), player.dir < 0);
+    if (state2.run.dp > 0 || state2.run.dsw > 0) spriteRot(detectiveSkin().idle, detectiveSkin().pal, Math.round(player.x), Math.round(fallY(FEET, state2.run.dp)), fallAng(state2.run.dp) + (state2.run.dsw > 0 ? Math.sin(gameState.clock * 8) * 0.12 : 0), player.dir < 0);
     else drawDetective(player.x, FEET + (state2.run.phase === "fight" ? state2.run.F && state2.run.F.out ? 8 : 12 : state2.run.phase === "flee" ? 8 : 0), player.dir, player.moving, player.walk);
     return true;
   },

@@ -9,7 +9,8 @@ import { canvas } from '../render/canvas.js';
 import { coverPanelOpen } from '../ui/cover.js';
 import { toggleGlasses } from '../ui/glasses.js';
 import { povAdvance } from '../ui/pov.js';
-import { resetToMenu, startGame } from './lifecycle.js';
+import { profileFormOpen } from '../ui/profile-form.js';
+import { requestStart, resetToMenu } from './lifecycle.js';
 
 function toCanvas(e) {
   const r = canvas.getBoundingClientRect();
@@ -97,7 +98,7 @@ export function installInputHandlers() {
       return;
     }
     if (gameState.mode === "menu") {
-      if ((k === "Enter" || k === " ") && !coverPanelOpen()) startGame();
+      if ((k === "Enter" || k === " ") && !coverPanelOpen() && !profileFormOpen()) requestStart();
       return;
     }
     if (k === "ArrowLeft" || k === "a" || k === "A") keys.l = true;

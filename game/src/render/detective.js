@@ -1,10 +1,8 @@
 /** @file Desenho e animação do detetive (andar, óculos, poeira dos passos). */
 import { activeCase } from '../cases/registry.js';
 import { gameState } from '../core/state.js';
-import { DET_A, DET_B, DET_IDLE, DET_PAL } from '../sprites/characters.js';
+import { detectiveSkin } from '../sprites/detective-skins.js';
 import { ctx, drawSprite, rect } from './canvas.js';
-
-const GAIT = [DET_A, DET_IDLE, DET_B, DET_IDLE];
 
 const puffs = [];
 
@@ -20,14 +18,15 @@ export function softShadow(x, feet, rx, alpha) {
 export function drawDetective(x, feet, dir, moving, walk) {
   const t = gameState.clock;
   const phase = moving ? Math.floor(walk / 0.12) % 4 : -1;
-  const s = moving ? GAIT[phase] : DET_IDLE;
+  const skin = detectiveSkin();
+  const s = moving ? [skin.a, skin.idle, skin.b, skin.idle][phase] : skin.idle;
   const bob = moving ? phase % 2 ? -0.5 : 0 : Math.sin(t * 2.2) * 0.25;
   if (moving && (phase === 0 || phase === 2) && lastPhase !== phase) {
     puffs.push({ x: x - dir * 3, y: feet - 0.8, t0: t, vx: -dir * (3 + Math.random() * 3) });
   }
   lastPhase = moving ? phase : -1;
   softShadow(x, feet, 6.5 + (bob < 0 ? -0.5 : 0), 0.36);
-  drawSprite(s, DET_PAL, x - 6, feet - s.length + bob, dir < 0);
+  drawSprite(s, skin.pal, x - 6, feet - s.length + bob, dir < 0);
   const gx = x - 6, gy = feet - s.length + 5 + bob;
   const px = (col, row, c) => rect(dir < 0 ? gx + 11 - col : gx + col, row, 1, 1, c);
   if (gameState.glassesOn) {

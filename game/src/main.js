@@ -2,7 +2,7 @@
  * Ponto de entrada: liga os módulos e inicia o laço do jogo.
  * Nenhuma regra de jogo mora aqui — apenas composição.
  */
-import './cases/index.js'; // registra os 3 casos em CASES (efeito colateral intencional)
+import './cases/index.js'; // registra o caso 0 (tutorial) e os 3 casos em CASES (efeito colateral intencional)
 import { installAmbient } from './audio/ambient.js';
 import { boardText, caseProgress } from './cases/progress.js';
 import { CASES } from './cases/registry.js';
@@ -12,6 +12,10 @@ import { advance } from './core/dialog.js';
 import { caseDone, gameState, player } from './core/state.js';
 import { installFocusGuards, installInputHandlers } from './game/input.js';
 import { installFinaleInput, installPlayButton, resetToMenu, startGame } from './game/lifecycle.js';
+import { installProfileForm } from './ui/profile-form.js';
+import { profile, setProfile } from './core/profile.js';
+import { PRO } from './scenes/prologue.js';
+import { stateT } from './cases/tutorial/state.js';
 import { startLoop } from './game/loop.js';
 import { installAchievements } from './platform/achievements.js';
 import { installCover } from './ui/cover.js';
@@ -23,6 +27,7 @@ installFinaleInput();
 installInputHandlers();
 installAmbient();
 installCover();
+installProfileForm();
 installPlayButton();
 installMobile();
 installAchievements();
@@ -33,5 +38,6 @@ if (typeof globalThis.__ESTACAO_TEST__ === 'function') {
   globalThis.__ESTACAO_TEST__({
     G: gameState, player, CASES, enterCase, startGame, resetToMenu, advance, povAdvance, startPOV, exitCase, caseDone,
     progress: { caseProgress, requestCase, openBoard, boardText },
+    profile, setProfile, PRO, tutorialState: stateT,
   });
 }

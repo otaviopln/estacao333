@@ -28,6 +28,8 @@ export const gameState = {
   clockSecOn: false,
   /** A Dona Célia saiu da bilheteria (some da janela e anda pela plataforma)? */
   celiaOut: false,
+  /** Gancho de teste: pula o prólogo (cutscene + caso 0) e vai direto à estação. */
+  skipPrologue: false,
   /** -1 = nenhuma | 0-2 = cutscenes de encerramento | 3 = chat dos óculos (primeira pessoa). */
   cutscene: -1,
 

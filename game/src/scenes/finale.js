@@ -6,7 +6,7 @@ import { DETECTIVE, say } from '../core/dialog.js';
 import { caseDone, gameState, player } from '../core/state.js';
 import { ctx, drawDisc, drawLine, drawText, pixelText, rect } from '../render/canvas.js';
 import { drawDetective } from '../render/detective.js';
-import { NEWS_PHOTO } from '../render/images.js';
+import { detectivePhoto } from '../render/images.js';
 import { setAdvice } from '../ui/hud.js';
 
 /* =================== FINAL DO JOGO (depois dos 3 casos) ===================
@@ -209,9 +209,10 @@ function drawFinaleBack() {
 function drawFinaleCredits() {
   rect(0, 0, SCREEN_W, SCREEN_H, "#07060d");
   const y0 = SCREEN_H + 10 - FIN.t * CRED_SPEED;
-  if (NEWS_PHOTO && NEWS_PHOTO.complete && NEWS_PHOTO.naturalWidth) {
+  const photo = detectivePhoto();
+  if (photo && photo.complete && photo.naturalWidth) {
     ctx.save(); ctx.globalAlpha = Math.min(0.85, FIN.t / 3);
-    rect(13, 33, 46, 60, "#2a2026"); ctx.drawImage(NEWS_PHOTO, 15, 35, 42, 56);
+    rect(13, 33, 46, 60, "#2a2026"); ctx.drawImage(photo, 15, 35, 42, 56);
     ctx.restore();
   }
   CREDITS.forEach(([kind, str], i) => {

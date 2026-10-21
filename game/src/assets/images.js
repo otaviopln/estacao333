@@ -6,5 +6,6 @@
 
 export const IMAGE_URLS = {
   newsPhoto: new URL('./news-photo.jpg', import.meta.url).href,
+  newsPhotoFemale: new URL('./news-photo-f.jpg', import.meta.url).href,
   arrestPhoto: new URL('./arrest-photo.jpg', import.meta.url).href,
 };

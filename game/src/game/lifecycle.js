@@ -6,12 +6,23 @@ import { choicesEl, dlg, gbtn, menuEl } from '../core/dom.js';
 import { caseDone, caseSave, gameState, keys, player } from '../core/state.js';
 import { IS_TOUCH } from '../render/viewport.js';
 import { finaleClick, resetFinale } from '../scenes/finale.js';
+import { resetPrologue } from '../scenes/prologue.js';
+import { resetProfile } from '../core/profile.js';
 import { resetStationLife } from '../scenes/station-life.js';
 import { STATION_HOTSPOTS } from '../scenes/station.js';
 import { closePanel } from '../ui/cover.js';
+import { openProfileForm, profileFormOpen } from '../ui/profile-form.js';
 import { setAdvice } from '../ui/hud.js';
 import { enterFullscreen } from '../ui/mobile.js';
 
+/** JOGAR (botão ou Enter): pede o nome e o sexo do detetive e só então inicia a partida. */
+export function requestStart() {
+  if (gameState.mode !== "menu" || profileFormOpen()) return;
+  closePanel();
+  openProfileForm(startGame);
+}
+
+/** Inicia a partida com o perfil atual (a capa some e começa o prólogo). */
 export function startGame() {
   if (gameState.mode !== "menu") return;
   gameState.mode = "fade";
@@ -22,6 +33,8 @@ export function startGame() {
 export function resetToMenu() {
   stopMusic();
   resetFinale();
+  resetPrologue();
+  resetProfile();
   gameState.mode = "menu";
   gameState.fadeTimer = 0;
   menuEl.classList.remove("hide");
@@ -69,7 +82,7 @@ export function installPlayButton() {
     e.stopPropagation();
     closePanel();
     if (IS_TOUCH) enterFullscreen();
-    startGame();
+    requestStart();
   });
 }
 

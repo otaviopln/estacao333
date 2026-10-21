@@ -38,6 +38,19 @@
       <div class="sub">Um detetive, uma IA, sem previsão de retorno</div>
       <button id="play" class="pxbtn">▶ JOGAR</button>
       <div class="hint">ou aperte ENTER</div>
+      <div id="profile" class="pxpanel" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+        <div class="ph" id="profileTitle">IDENTIFICAÇÃO</div>
+        <p class="pn">A Polícia Científica da Paraíba precisa saber quem vai entrar em campo.</p>
+        <label class="fld" for="pname">NOME</label>
+        <input id="pname" type="text" maxlength="14" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Digite seu nome">
+        <div class="fld" id="sexLabel">SEXO</div>
+        <div class="sex" role="radiogroup" aria-labelledby="sexLabel">
+          <button type="button" class="pxsex" role="radio" aria-checked="false" data-sex="m"><canvas class="skin" width="12" height="28"></canvas><span>MASCULINO</span></button>
+          <button type="button" class="pxsex" role="radio" aria-checked="false" data-sex="f"><canvas class="skin" width="12" height="28"></canvas><span>FEMININO</span></button>
+        </div>
+        <div class="perr" id="perr" role="alert"></div>
+        <div class="prow"><button type="button" class="pxbtn sm" id="pback">VOLTAR</button><button type="button" class="pxbtn sm" id="pgo">▶ COMEÇAR</button></div>
+      </div>
       <div id="mpanel" class="pxpanel" role="dialog" aria-modal="true">
         <div class="ph"></div>
         <div class="pb"></div>

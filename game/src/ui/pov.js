@@ -2,6 +2,7 @@
 import { CASES } from '../cases/registry.js';
 import { say } from '../core/dialog.js';
 import { povA, povEl, povH, povMem, povU } from '../core/dom.js';
+import { personalize, playerName } from '../core/profile.js';
 import { gameState } from '../core/state.js';
 import { setAdvice } from './hud.js';
 
@@ -14,20 +15,20 @@ export function sendPrompt() {
 }
 
 export function startPOV() {
-  const c = CASES[gameState.caseIndex], ord = c.ord || c.mem.map((_, i) => i), full = c.pfx + ord.map((i) => c.mem[i][2] + c.mem[i][1]).join("") + "?";
+  const c = CASES[gameState.caseIndex], ord = c.ord || c.mem.map((_, i) => i), full = personalize(c.pfx + ord.map((i) => c.mem[i][2] + c.mem[i][1]).join("") + "?");
   let acc = c.pfx.length;
   const ends = [];
   ord.forEach((i) => {
     acc += (c.mem[i][2] + c.mem[i][1]).length;
     ends[i] = acc;
   });
-  pov = { full, reply: c.dir, n: 0, r: 0, ends, ready: false };
+  pov = { full, reply: personalize(c.dir), n: 0, r: 0, ends, ready: false };
   gameState.cutscene = 3;
   gameState.fadeIn = 0.5;
   povMem.innerHTML = "";
   c.mem.forEach((m) => {
     const li = document.createElement("li");
-    li.textContent = m[0];
+    li.textContent = personalize(m[0]);
     povMem.appendChild(li);
   });
   povU.textContent = "";
@@ -38,8 +39,8 @@ export function startPOV() {
 }
 
 function fitPov(c, full) {
-  povU.textContent = "DETETIVE ▸ " + full;
-  povA.textContent = "ÓCULOS ▸ " + c.dir;
+  povU.textContent = playerName().toUpperCase() + " ▸ " + full;
+  povA.textContent = "ÓCULOS ▸ " + personalize(c.dir);
   povA.style.display = "block";
   povH.style.display = "block";
   for (const el of [document.getElementById("povL"), document.getElementById("povR")]) {
@@ -63,7 +64,7 @@ export function povTick(dt) {
     else if (pov.r < pov.reply.length) pov.r = Math.min(pov.reply.length, pov.r + dt * 45);
     else pov.ready = true;
   }
-  povU.textContent = "DETETIVE ▸ " + pov.full.slice(0, pov.n | 0);
+  povU.textContent = playerName().toUpperCase() + " ▸ " + pov.full.slice(0, pov.n | 0);
   Array.from(povMem.children).forEach((li, i) => {
     li.className = pov.n >= pov.ends[i] ? "on" : "";
   });

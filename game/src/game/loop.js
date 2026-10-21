@@ -5,7 +5,6 @@ import { drawCut } from '../cases/cutscene.js';
 import { interact } from '../cases/interaction.js';
 import { activeCase, CASES } from '../cases/registry.js';
 import { clamp, RENDER_SCALE, SCREEN_H, SCREEN_W, SPEED } from '../core/config.js';
-import { DETECTIVE, say } from '../core/dialog.js';
 import { dlg, fbtn, flb, frb, gbtn, txtEl } from '../core/dom.js';
 import { hit } from '../core/hotspots.js';
 import { drops, gameState, keys, mouse, player, smoke } from '../core/state.js';
@@ -14,6 +13,8 @@ import { fxAdapt } from '../render/fx.js';
 import { gameEl, labelEl } from '../render/viewport.js';
 import { drawFinale, FIN, finaleTick } from '../scenes/finale.js';
 import { drawMenu } from '../scenes/menu.js';
+import { beginPrologue, drawPrologue, PRO, prologueTick } from '../scenes/prologue.js';
+import { startStationIntro } from '../scenes/station-intro.js';
 import { povTick } from '../ui/pov.js';
 import { drawPlay } from './render.js';
 
@@ -42,13 +43,8 @@ function update(dt) {
     gameState.fadeTimer += dt;
     if (gameState.fadeTimer >= 1) {
       gameState.mode = "play";
-      say([
-        [DETECTIVE, "Estação Central. Três e trinta e três da manhã."],
-        [DETECTIVE, "Três trens esperando. Três casos. E nenhum café decente à vista."],
-        [DETECTIVE, "Pelo menos tenho meus óculos inteligentes, com IA embarcada. Eles analisam as pistas e me explicam o que veem."],
-        ["Óculos", "Online. Toque numa pista e eu faço a análise."],
-        ["", "Clique no chão para andar e em objetos ou pessoas para interagir. No teclado: setas para andar, E para interagir, Q (ou o ícone no canto) para colocar e tirar os óculos."]
-      ]);
+      if (gameState.skipPrologue) startStationIntro();
+      else beginPrologue();
     }
   }
   if (gameState.mode !== "play" && !(gameState.mode === "fade" && gameState.fadeTimer >= 0.5)) return;
@@ -129,6 +125,7 @@ function frame(now) {
   fxAdapt(frameEma);
   update(dt);
   finaleTick(dt);
+  prologueTick(dt);
   ambientAudio();
   caseMusic();
   ctx.setTransform(RENDER_SCALE, 0, 0, RENDER_SCALE, 0, 0);
@@ -143,13 +140,14 @@ function frame(now) {
       rect(0, 0, SCREEN_W, SCREEN_H, `rgba(0,0,0,${1 - (gameState.fadeTimer - 0.5) / 0.5})`);
     }
   } else if (FIN.on) drawFinale(drawPlay);
+  else if (PRO.on) drawPrologue();
   else if (gameState.cutscene >= 0) drawCut();
   else drawPlay();
   if (gameEl.classList) gameEl.classList.toggle("fx", gameState.mode === "play" || gameState.mode === "fade" && gameState.fadeTimer >= 0.5);
   const coverArtEl = document.getElementById("coverArt");
   if (coverArtEl && coverArtEl.style) coverArtEl.style.display = gameState.mode === "menu" || gameState.mode === "fade" && gameState.fadeTimer < 0.5 ? "" : "none";
   labelEl.textContent = gameState.hovered ? gameState.hovered.name : "";
-  gbtn.style.display = gameState.mode === "play" && gameState.cutscene < 0 && !gameState.choiceOpen ? "flex" : "none";
+  gbtn.style.display = gameState.mode === "play" && gameState.cutscene < 0 && !gameState.choiceOpen && !PRO.on ? "flex" : "none";
   const ac = activeCase(), act = gameState.mode === "play" && ac && ac.actionLabel ? ac.actionLabel() : null;
   fbtn.style.display = act ? "block" : "none";
   flb.style.display = frb.style.display = "none";

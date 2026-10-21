@@ -43,7 +43,7 @@ import { gameState } from '../core/state.js';
  * @property {object} cut               Textos da cutscene de encerramento.
  */
 
-/** @type {CaseDefinition[]} Índice = plataforma (0, 1, 2). Preenchido por `cases/index.js`. */
+/** @type {CaseDefinition[]} Índice = plataforma (0, 1, 2); o índice 3 é o caso 0 (tutorial). Preenchido por `cases/index.js`. */
 export const CASES = [];
 
 /** O caso em que o jogador está agora, ou `null` se estiver na estação. */

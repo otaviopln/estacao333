@@ -106,7 +106,7 @@ Passo a passo de lançamento em [`STEAM.md`](STEAM.md).
 |---|---|---|
 | `desktop/tests` | processo principal inteiro com objetos falsos: settings, logger, Steam, IPC, segurança, janela, crash, composição do app, **contrato preload ⇄ host** | `npm run test:unit` |
 | `scripts/tests` | build web/desktop (CSP, fonte obrigatória), `desktop-prepare`, VDF, bloqueios do upload, achievements em dia, `electron-builder`/`package.json` coerentes | idem |
-| `game/tests/platform` | `host` web/desktop e regras de conquistas | idem |
+| `game/tests/platform`, `profile`, `prologue` | `host` web/desktop e conquistas; nome/gênero/skins; **o prólogo e o caso 0 inteiros jogados por um bot** (homem e mulher, ES Modules e bundle) | idem |
 | `game/tests/run.mjs` | **regressão do jogo**: 10.901 hashes de canvas/áudio, ESM e bundle, contra o HTML original | `npm run test:game` |
 | `npm run check` | 0 ciclos de dependência, nomes indefinidos, imports quebrados (jogo); checagem de tipos do desktop (aviso) | |
 
