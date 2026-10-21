@@ -6,6 +6,7 @@ import { fbtn, flb, frb, gbtn } from '../core/dom.js';
 import { hit } from '../core/hotspots.js';
 import { gameState, keys, mouse, player } from '../core/state.js';
 import { canvas } from '../render/canvas.js';
+import { toggleHud } from '../render/vision.js';
 import { coverPanelOpen } from '../ui/cover.js';
 import { toggleGlasses } from '../ui/glasses.js';
 import { povAdvance } from '../ui/pov.js';
@@ -67,6 +68,13 @@ export function installInputHandlers() {
     const p = toCanvas(e);
     mouse.x = p.x;
     mouse.y = p.y;
+    // Clique no HUD dos óculos (canto superior direito) minimiza/restaura o HUD
+    if (gameState.glassesOn && p.x > SCREEN_W - 70 && p.x < SCREEN_W && p.y > 20 && p.y < 72) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleHud();
+      return;
+    }
     if (gameState.mode === "menu") return;
     if (gameState.mode === "play") {
       const ac = activeCase();

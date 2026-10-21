@@ -16,7 +16,7 @@ function run(mode, sex) {
   return JSON.parse(r.stdout.slice(i + 10));
 }
 
-const STEPS = ['car:move', 'car:interact', 'car:glasses', 'car:scan', 'room:room', 'room:call', 'room:light', 'room:wait', 'room:ambush', 'room:done'];
+const STEPS = ['carExterior:intro', 'carExterior:carTalk', 'carExterior:distrust', 'carExterior:arrive', 'room:arrive', 'room:move', 'room:interact', 'room:glasses', 'room:scan', 'room:call', 'room:light', 'room:wait', 'room:ambush', 'room:done'];
 
 for (const sex of ['f', 'm']) {
   test(`prólogo + caso 0 completos (${sex === 'f' ? 'detetive mulher' : 'detetive homem'}): carro → hotel → prisão → estação`, () => {
@@ -24,7 +24,7 @@ for (const sex of ['f', 'm']) {
     assert.deepEqual(r.errors, [], r.errors.join('\n'));
     assert.ok(r.log.includes('prologue:office') && r.log.includes('prologue:street'), r.log.join(' > '));
     for (const step of STEPS) assert.ok(r.log.includes(step), `passo ausente: ${step}\n${r.log.join(' > ')}`);
-    assert.deepEqual(r.clues, ['Fechadura eletrônica', 'Janela do quarto', 'Pasta do Departamento', 'Planta de evacuação', 'Telefone do quarto']);
+    assert.deepEqual(r.clues, ['Copo de água na pia', 'Fechadura eletrônica', 'Janela do quarto', 'Telefone do quarto']);
     assert.equal(r.scene, 'station');
     assert.equal(r.caseIndex, 0);
     assert.equal(r.mode, 'play');

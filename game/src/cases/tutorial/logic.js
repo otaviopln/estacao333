@@ -1,4 +1,4 @@
-/** @file Regras do caso 0 (tutorial): carro (2 pistas) → quarto do hotel (4 pistas) → dedução → emboscada e prisão do motorista. */
+/** @file Regras do caso 0 (tutorial): carro visto de fora na rodovia → cutscene de desconfiança → quarto do hotel → dedução → emboscada e prisão do motorista. */
 import { lockBeep, switchClick, tutorialDing } from "../../audio/sfx.js";
 import { gbtn } from "../../core/dom.js";
 import { DETECTIVE, say } from "../../core/dialog.js";
@@ -16,7 +16,24 @@ function tutorialClue(j) {
   return { name: k[0], x: k[1], y: k[2], w: k[3], h: k[4], wx: k[5], clue: true, n: 0, talk: [[[DETECTIVE, k[6]], ["Óculos", k[7]], ["Memória", "«" + c.mem[j][0] + "»"]], [["Óculos", k[7]]]] };
 }
 
-/** Coleta de pista feita à mão (para as pistas que também têm outra função: celular do carro e telefone do quarto). */
+function carHotspots() {
+  // No carro visto de fora não há hotspots coletáveis; só o motorista como contexto visual
+  return [];
+}
+
+function roomHotspots() {
+  const phone = tutorialClue(3);
+  phone.go = function () {
+    const r = stateT.run;
+    if (r.step === "call") callHelena();
+    else if (!gameState.caseSolved) collectClue(this);
+    else say([["Óculos", "Você já avisou a Dra. Helena. Agora siga o plano."]]);
+  };
+  const sw = { name: "Interruptor de luz", x: 46, y: 40, w: 10, h: 14, wx: 52, n: 0, go() { switchTalk(); } };
+  return [tutorialClue(0), tutorialClue(1), tutorialClue(2), phone, sw];
+}
+
+/** Coleta de pista feita à mão (para as pistas que também têm outra função: telefone do quarto). */
 function collectClue(h) {
   const first = h.n === 0, lines = h.talk[Math.min(h.n, h.talk.length - 1)];
   h.n++;
@@ -29,34 +46,9 @@ function collectClue(h) {
   });
 }
 
-function carHotspots() {
-  const phone = tutorialClue(1);
-  phone.go = function () {
-    if (!gameState.glassesOn) {
-      say([[DETECTIVE, "O celular dele, no suporte do painel. A tela está apagada."], ["Óculos", "Eu li o reflexo antes de apagar. Me coloque nos olhos (Q) e eu analiso o aparelho."]]);
-      return;
-    }
-    collectClue(this);
-  };
-  const driver = { name: DRIVER.name + " (motorista)", x: DRIVER.x, y: DRIVER.y, w: DRIVER.w, h: DRIVER.h, wx: DRIVER.wx, n: 0, npc: true, go() { driverTalk(this); } };
-  return [tutorialClue(0), phone, driver];
-}
-
-function roomHotspots() {
-  const phone = tutorialClue(5);
-  phone.go = function () {
-    const r = stateT.run;
-    if (r.step === "call") callHelena();
-    else if (!gameState.caseSolved) collectClue(this);
-    else say([["Óculos", "Você já avisou a Dra. Helena. Agora siga o plano."]]);
-  };
-  const sw = { name: "Interruptor de luz", x: 46, y: 40, w: 10, h: 14, wx: 52, n: 0, go() { switchTalk(); } };
-  return [tutorialClue(2), tutorialClue(3), tutorialClue(4), phone, sw];
-}
-
 /** Entra no caso 0: chamado quando a cutscene do prólogo termina. */
 export function startTutorial() {
-  stateT.run = { place: "car", step: "intro", t: 0, scroll: 0, bump: 0, scanned: false, busy: true, fade: 0, trans: null, lightsOff: false, amb: null, card: 0 };
+  stateT.run = { place: "carExterior", step: "intro", t: 0, scroll: 0, bump: 0, scanned: false, busy: true, fade: 0, trans: null, lightsOff: false, amb: null, card: 0, talkIdx: 0 };
   gameState.scene = "case";
   gameState.caseIndex = 3;
   gameState.clueTotal = TUTORIAL_CLUES.length;
@@ -74,7 +66,7 @@ export function startTutorial() {
   player.tx = null;
   player.pending = null;
   setAdvice("");
-  say(INTRO_LINES, () => { stateT.run.busy = false; goStep("move"); });
+  say(INTRO_LINES, () => { stateT.run.busy = false; goStep("carTalk"); });
 }
 
 /** Tira os óculos (o detetive os guarda em cenas de transição e de emboscada). */
@@ -89,7 +81,7 @@ function goStep(step) {
   const r = stateT.run;
   r.step = step;
   if (STEP_TEXT[step]) setAdvice(STEP_TEXT[step]);
-  if (step !== "move") tutorialDing();
+  if (step !== "move" && step !== "intro" && step !== "carTalk") tutorialDing();
 }
 
 /** Diálogo curto de explicação; só abre quando nada mais está acontecendo. */
@@ -118,24 +110,22 @@ export function tutorialTick(dt) {
   if (r.amb) { ambushTick(r, dt); return; }
   if (r.busy || !idle()) return;
 
-  if (r.place === "car") {
-    if (r.step === "move" && player.x >= 140) {
-      goStep("interact");
-      explain([["Óculos", "Perfeito. Agora, interaja: chegue perto de um objeto e clique nele, ou aperte E."]]);
-    } else if (r.step === "interact" && gameState.cluesFound >= 1) {
-      goStep("glasses");
-      explain([["Óculos", "Cada pista vira uma memória minha. Agora, me coloque nos olhos: aperte Q ou toque no ícone dos óculos, no canto da tela."]]);
-    } else if (r.step === "glasses" && gameState.glassesOn) {
-      goStep("scan");
-      explain([["Óculos", "Pronto. Com os óculos ligados, uma luz azul no chão mostra o caminho até a próxima pista. Clique em qualquer objeto e eu o analiso antes."]]);
-    } else if (r.step === "scan" && gameState.objScan) {
-      r.scanned = true;
-    } else if (r.step === "scan" && r.scanned && !gameState.objScan) {
-      goStep("hunt");
-    } else if (r.step === "scan" && !gameState.glassesOn) {
-      goStep("glasses");
+  if (r.place === "carExterior") {
+    if (r.step === "carTalk") {
+      goStep("carTalk");
+      explain(DRIVER_TALK[Math.min(r.talkIdx, DRIVER_TALK.length - 1)], () => {
+        r.talkIdx++;
+        if (r.talkIdx < DRIVER_TALK.length) {
+          goStep("carTalk");
+        } else {
+          goStep("distrust");
+          explain([["Óculos", "Algo não bate com esse Valdemar. Ele está nervoso demais para um simples motorista."]], () => {
+            goStep("arrive");
+            arriveHotel();
+          });
+        }
+      });
     }
-    if (gameState.cluesFound >= 2 && !r.trans) arriveHotel();
   } else if (gameState.caseSolved && r.step === "room") {
     goStep("call");
   }
@@ -161,7 +151,7 @@ function transitionTick(r, dt) {
     r.trans = { phase: "in", t: 0 };
   } else if (r.trans.phase === "in" && r.trans.t >= 1.6) {
     r.trans = null;
-    say(ROOM_LINES, () => { r.busy = false; goStep("room"); });
+    say(ROOM_LINES, () => { r.busy = false; goStep("move"); });
   }
 }
 

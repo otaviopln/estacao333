@@ -19,7 +19,7 @@ export function drawPlay() {
     ac.draw();
     drawClues();
     ac.drawDoors();
-  } else drawStation();
+  } else if (gameState.scene !== "prologue") drawStation();
   if (gameState.glassesOn) drawVision();
   if (gameState.cutscene !== 3) {
     if (!(ac && ac.drawPlayer && ac.drawPlayer())) drawDetective(player.x, FEET, player.dir, player.moving, player.walk);

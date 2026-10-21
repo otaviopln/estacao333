@@ -25,6 +25,12 @@ let trailFrom = null;
 
 let pendingLabel = null;
 
+/** HUD do modo óculos (canto superior direito): pode ser minimizado ao clicar. */
+let hudMinimized = false;
+
+export function toggleHud() { hudMinimized = !hudMinimized; }
+export function isHudMinimized() { return hudMinimized; }
+
 const fmt = (n, d = 1) => n.toFixed(d);
 
 function kindOf(h) {
@@ -231,6 +237,15 @@ function drawObjScan(t) {
 }
 
 export function drawVisionHud() {
+  if (hudMinimized) {
+    // HUD minimizado: apenas um pequeno botão de expansão no canto
+    const px = SCREEN_W - 44, py = 22, pw = 36, ph = 14;
+    rect(px, py, pw, ph, "rgba(3,22,38,.70)");
+    brackets(px, py, pw, ph, 2, 0.8, 0.4);
+    drawText("▸ ÓCULOS", px + 4, py + 5, "#5fe0ff", 3.4);
+    ctx.save();
+    return;
+  }
   const t = gameState.clock, vt = t - visionStart;
   ctx.save();
   const vg = ctx.createRadialGradient(SCREEN_W / 2, SCREEN_H / 2, SCREEN_H * 0.35, SCREEN_W / 2, SCREEN_H / 2, SCREEN_H * 0.85);

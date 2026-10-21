@@ -27,6 +27,7 @@ export function startGame() {
   if (gameState.mode !== "menu") return;
   gameState.mode = "fade";
   gameState.fadeTimer = 0;
+  gameState.scene = "prologue"; // evita flash da estação antes do prólogo começar
   menuEl.classList.add("hide");
 }
 

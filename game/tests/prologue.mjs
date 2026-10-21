@@ -1,6 +1,6 @@
 /**
  * Joga o prólogo inteiro com um bot determinístico: formulário (perfil) → cutscene do escritório → rua → caso 0
- * (carro, 2 pistas) → hotel (4 pistas) → dedução → ligação, luz, espera → emboscada e prisão → estação.
+ * (carro visto de fora na rodovia, cutscene de desconfiança) → hotel (4 pistas) → dedução → ligação, luz, espera → emboscada e prisão → estação.
  * Uso interno de `prologue.test.mjs`; roda em ESM e no bundle (mesmo scenario, mesmos dígitos).
  */
 import { createEnvironment } from './harness.mjs';
@@ -41,13 +41,12 @@ export async function runPrologue(loadGame, { female = true, name = 'Lívia', se
     G.hotspots.forEach((h) => { if (h.clue && h.n > 0) cluesSeen.add(h.name); });
     if (f % 20 !== 0) continue;
 
-    if (r.place === 'car') {
-      if (r.step === 'move') env.keyDown('ArrowRight');
+    if (r.place === 'carExterior') {
+      // Carro visto de fora: só andar até o meio e avançar a cutscene de Valdemar
+      if (r.step === 'move' || r.step === 'intro' || r.step === 'driverTalk' || r.step === 'distrust') env.keyDown('ArrowRight');
       else env.keyUp('ArrowRight');
-      if (r.step === 'interact') clickHotspot(hotspot(/Pasta/));
-      else if (r.step === 'glasses') env.key('q');
-      else if (r.step === 'scan' || r.step === 'hunt') clickHotspot(hotspot(/Celular do motorista/));
-    } else if (r.step === 'room' && !G.caseSolved) {
+      // Sem pistas para coletar no carro: apenas avançar diálogos (já feito acima via dialogLine)
+    } else if (r.place === 'room' && r.step === 'move' && !G.caseSolved) {
       if (!G.glassesOn) env.key('q');
       const next = G.hotspots.find((h) => h.clue && h.n === 0);
       if (next) clickHotspot(next);
